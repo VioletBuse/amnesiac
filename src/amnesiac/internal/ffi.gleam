@@ -7,8 +7,8 @@ pub fn abort(reason: a) -> Nil
 
 pub type Table
 
-pub type CheckpointArgs {
-  Name(String)
+pub type CheckpointArgs(a) {
+  Name(a)
   Max(List(Table))
   Min(List(Table))
   AllowRemote(Bool)
@@ -17,8 +17,8 @@ pub type CheckpointArgs {
 
 @external(erlang, "amnesiac_ffi", "activate_checkpoint")
 pub fn activate_checkpoint(
-  args: List(CheckpointArgs),
-) -> Result(#(String, List(Node)), Dynamic)
+  args: List(CheckpointArgs(a)),
+) -> Result(#(a, List(Node)), Dynamic)
 
 pub type ActivityContext
 
@@ -153,3 +153,29 @@ pub fn create_table(
   name: Table,
   options: List(CreateOption),
 ) -> Result(Nil, Dynamic)
+
+@external(erlang, "amnesiac_ffi", "deactivate_checkpoint")
+pub fn deactivate_checkpoint(name: a) -> Result(Nil, Dynamic)
+
+@external(erlang, "amnesiac_ffi", "del_table_copy")
+pub fn del_table_copy(table: Table, node: Node) -> Result(Nil, Dynamic)
+
+@external(erlang, "amnesiac_ffi", "del_table_index")
+pub fn del_table_index(table: Table, index: Atom) -> Result(Nil, Dynamic)
+
+pub type LockKind {
+  Write
+  StickyWrite
+}
+
+@external(erlang, "amnesiac_ffi", "delete")
+pub fn delete(table: Table, key: a, with lock_kind: LockKind) -> Nil
+
+@external(erlang, "amnesiac_ffi", "delete_object")
+pub fn delete_object(table: Table, record: a, with lock_kind: LockKind) -> Nil
+
+@external(erlang, "amnesiac_ffi", "delete_schema")
+pub fn delete_schema(nodes: List(Node)) -> Result(Nil, Dynamic)
+
+@external(erlang, "amnesiac_ffi", "delete_table")
+pub fn delete_table(table: Table) -> Result(Nil, Dynamic)
