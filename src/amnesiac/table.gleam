@@ -54,3 +54,18 @@ pub fn del_table_index(
 
 @external(erlang, "table_ffi", "delete_table")
 pub fn delete_table(table: Table) -> Result(Nil, Dynamic)
+
+@external(erlang, "table_ffi", "move_table_copy")
+pub fn move_table_copy(
+  table: Table,
+  from node_1: Node,
+  to node_2: Node,
+) -> Result(Nil, Dynamic)
+
+@external(erlang, "table_ffi", "transform_table")
+pub fn transform_table(
+  table: Table,
+  transformer fxn: fn(a) -> b,
+  new_attributes attrs: List(Atom),
+  name record_name: Atom,
+) -> Result(Nil, Dynamic)
