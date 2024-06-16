@@ -1,4 +1,4 @@
-import amnesiac/table.{type Table}
+import amnesiac/internal/table.{type Table}
 
 pub type WriteLock {
   Write

@@ -1,5 +1,5 @@
-import amnesiac/lock.{type LockType}
-import amnesiac/table.{type Table}
+import amnesiac/internal/lock.{type LockType}
+import amnesiac/internal/table.{type Table}
 import gleam/option.{type Option}
 
 @external(erlang, "read_ffi", "all_keys")
