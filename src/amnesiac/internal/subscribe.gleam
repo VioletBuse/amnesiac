@@ -20,13 +20,26 @@ pub fn subscribe_table_detailed(table: Table) -> Result(Node, Dynamic)
 pub type SystemEvent {
   MnesiaUp(Node)
   MnesiaDown(Node)
+  MnesiaCheckpointActivated(Dynamic)
+  MnesiaCheckpointDeactivated(Dynamic)
+  MnesiaOverload(Dynamic)
+  InconsistentDatabase(Dynamic, Node)
+  MnesiaFatal(Dynamic, List(Dynamic))
+  MnesiaInfo(Dynamic, List(Dynamic))
+  MnesiaError(Dynamic, List(Dynamic))
+  MnesiaUser(Dynamic)
 }
 
 // mnesia_activity_event
-pub type ActivityEvent
+pub type ActivityEvent {
+  Complete(id: Dynamic)
+}
 
 // mnesia_table_event
-pub type TableEvent
+pub type DetailedTableEvent {
+  Write(Table, Dynamic, List(Dynamic), Dynamic)
+  Delete(Table, Dynamic, List(Dynamic), Dynamic)
+}
 
 pub fn selecting_system(
   selector: Selector(a),
@@ -35,5 +48,6 @@ pub fn selecting_system(
   process.selecting_record2(
     selector,
     atom.create_from_string("mnesia_system_event"),
+    fn(dyn: Dynamic) { todo },
   )
 }
