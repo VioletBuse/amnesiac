@@ -1,8 +1,7 @@
+import amnesiac/internal/opaque_types.{type Attribute, type Record, type Table}
 import gleam/dynamic.{type Dynamic}
 import gleam/erlang/atom.{type Atom}
 import gleam/erlang/node.{type Node}
-
-pub type Table
 
 @external(erlang, "table_ffi", "table_name")
 pub fn table_name(name: Atom) -> Table
@@ -49,7 +48,7 @@ pub fn del_table_copy(table: Table, node: Node) -> Result(Nil, Dynamic)
 @external(erlang, "table_ffi", "del_table_index")
 pub fn del_table_index(
   table: Table,
-  index attribute: Atom,
+  index attribute: Attribute,
 ) -> Result(Nil, Dynamic)
 
 @external(erlang, "table_ffi", "delete_table")
@@ -65,7 +64,7 @@ pub fn move_table_copy(
 @external(erlang, "table_ffi", "transform_table")
 pub fn transform_table(
   table: Table,
-  transformer fxn: fn(a) -> b,
-  new_attributes attrs: List(Atom),
+  transformer fxn: fn(Record) -> Record,
+  new_attributes attrs: List(Attribute),
   name record_name: Atom,
 ) -> Result(Nil, Dynamic)

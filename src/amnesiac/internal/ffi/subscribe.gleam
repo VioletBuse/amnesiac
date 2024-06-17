@@ -1,4 +1,6 @@
-import amnesiac/internal/table.{type Table}
+import amnesiac/internal/opaque_types.{
+  type ActivityId, type CheckpointName, type Key, type Record, type Table,
+}
 import gleam/dynamic.{type Dynamic}
 import gleam/erlang/atom
 import gleam/erlang/node.{type Node}
@@ -20,8 +22,8 @@ pub fn subscribe_table_detailed(table: Table) -> Result(Node, Dynamic)
 pub type SystemEvent {
   MnesiaUp(Node)
   MnesiaDown(Node)
-  MnesiaCheckpointActivated(Dynamic)
-  MnesiaCheckpointDeactivated(Dynamic)
+  MnesiaCheckpointActivated(CheckpointName)
+  MnesiaCheckpointDeactivated(CheckpointName)
   MnesiaOverload(Dynamic)
   InconsistentDatabase(Dynamic, Node)
   MnesiaFatal(Dynamic, List(Dynamic))
@@ -32,22 +34,19 @@ pub type SystemEvent {
 
 // mnesia_activity_event
 pub type ActivityEvent {
-  Complete(id: Dynamic)
+  Complete(id: ActivityId)
+}
+
+// mnesia_table_event
+pub type SimpleTableEvent {
+  SimpleWrite(Record, ActivityId)
+  SimpleDeleteObject(Record, ActivityId)
+  SimpleDelete(#(Table, Dynamic), ActivityId)
 }
 
 // mnesia_table_event
 pub type DetailedTableEvent {
-  Write(Table, Dynamic, List(Dynamic), Dynamic)
-  Delete(Table, Dynamic, List(Dynamic), Dynamic)
-}
-
-pub fn selecting_system(
-  selector: Selector(a),
-  mapping transform: fn(SystemEvent) -> a,
-) -> Selector(a) {
-  process.selecting_record2(
-    selector,
-    atom.create_from_string("mnesia_system_event"),
-    fn(dyn: Dynamic) { todo },
-  )
+  DetailedWrite(Table, Record, List(Record), ActivityId)
+  DetailedDeleteRecord(Table, Record, List(Record), ActivityId)
+  DetailedDeleteWithKey(Table, #(Table, Key), List(Record), ActivityId)
 }

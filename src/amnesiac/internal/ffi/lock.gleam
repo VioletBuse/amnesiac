@@ -1,4 +1,4 @@
-import amnesiac/internal/table.{type Table}
+import amnesiac/internal/opaque_types.{type Key, type Table}
 import gleam/erlang/node.{type Node}
 
 pub type LockType {
@@ -8,7 +8,7 @@ pub type LockType {
 }
 
 pub type LockItem(a) {
-  Record(Table, a)
+  Record(Table, Key)
   Table(Table)
   Global(a, List(Node))
 }
